@@ -1,144 +1,115 @@
 /* General Styles */
 body {
-  font-family: 'Arial', sans-serif;
-  background-color: #f0f8ff;
+  font-family: Arial, sans-serif;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
   margin: 0;
-  padding: 0;
-  color: #333;
+  background-color: #f4f4f9;
 }
-
-.container {
-  max-width: 1000px;
+.calculator {
+  max-width: 600px;
   margin: 0 auto;
-  padding: 40px 20px;
-}
-
-header {
+  padding: 30px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   text-align: center;
-  background-color: #007acc;
+}
+.calculator label {
+  display: block;
+  text-align: left;
+  font-weight: bold;
+  margin-top: 15px;
+}
+input[type="number"] {
+  width: calc(100% - 22px);
+  padding: 10px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1em;
+  box-sizing: border-box;
+}
+button {
+  padding: 15px;
+  margin-top: 20px;
+  background-color: #4CAF50;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  width: 100%;
+  font-size: 1.2em;
+}
+button:hover {
+  background-color: #45a049;
+}
+.result {
+  margin-top: 20px;
+  overflow-x: auto;
+}
+
+/* Feedback Form Styles */
+.feedback-container {
+  position: fixed;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 100;
+}
+.feedback-toggle {
+  background-color: #4CAF50;
+  color: #fff;
+  padding: 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.feedback-form {
+  display: none;
+  background-color: #fff;
   padding: 20px;
-  border-radius: 10px;
-  color: white;
-  margin-bottom: 20px;
-}
-
-h1 {
-  margin: 0;
-  font-size: 2.5rem;
-}
-
-h2 {
-  margin-bottom: 10px;
-}
-
-#notes-section {
-  background-color: white;
-  padding: 20px;
-  border-radius: 10px;
+  margin-top: 10px;
+  border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
-
-/* Note Input Section */
-#note-input-section {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-bottom: 20px;
-}
-
-textarea {
-  width: 100%;
-  padding: 15px;
-  border: 2px solid #007acc;
-  border-radius: 5px;
-  font-size: 1.1rem;
-  resize: none;
-  height: 120px;
-}
-
-#category-input {
-  width: 150px;
+.feedback-form input[type="text"], .feedback-form textarea {
+  width: calc(100% - 22px);
   padding: 10px;
-  border-radius: 5px;
-  font-size: 1.1rem;
-  border: 2px solid #007acc;
+  margin-top: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 1em;
+  box-sizing: border-box;
 }
-
-button {
-  padding: 12px;
-  background-color: #007acc;
-  color: white;
+.feedback-submit, .feedback-close {
+  margin-top: 10px;
+  background-color: #4CAF50;
+  color: #fff;
+  padding: 10px;
   border: none;
-  border-radius: 5px;
-  font-size: 1.2rem;
+  border-radius: 4px;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  width: calc(50% - 10px);
+}
+.feedback-submit:hover, .feedback-close:hover {
+  background-color: #45a049;
+}
+.feedback-close {
+  background-color: #f44336;
+}
+.feedback-close:hover {
+  background-color: #e53935;
 }
 
-button:hover {
-  background-color: #005f99;
-}
-
-/* Notes List */
-#note-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-  gap: 20px;
-}
-
-/* Individual Note Card */
-.note-card {
-  background-color: #f9f9f9;
-  border: 2px solid #ddd;
-  border-radius: 10px;
-  padding: 20px;
-  position: relative;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.note-category {
-  font-size: 0.9rem;
-  font-weight: bold;
-  color: #007acc;
-  margin-bottom: 5px;
-}
-
-.note-content {
-  font-size: 1.1rem;
-  margin-bottom: 10px;
-}
-
-.note-actions {
-  display: flex;
-  justify-content: space-between;
-}
-
-.note-actions button {
-  padding: 8px 10px;
-  font-size: 0.9rem;
-  border-radius: 5px;
-}
-
-.edit-btn {
-  background-color: #ffa500;
-}
-
-.delete-btn {
-  background-color: red;
-  color: white;
-}
-
-.edit-btn:hover {
-  background-color: #e69500;
-}
-
-.delete-btn:hover {
-  background-color: darkred;
-}
-
-/* Responsive */
+/* Responsive Styles */
 @media (max-width: 600px) {
-  #note-container {
-      grid-template-columns: 1fr;
+  .calculator {
+      padding: 20px;
+  }
+  .feedback-container {
+      right: 10px;
   }
 }
