@@ -1,0 +1,144 @@
+/* General Styles */
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f0f8ff;
+  margin: 0;
+  padding: 0;
+  color: #333;
+}
+
+.container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+header {
+  text-align: center;
+  background-color: #007acc;
+  padding: 20px;
+  border-radius: 10px;
+  color: white;
+  margin-bottom: 20px;
+}
+
+h1 {
+  margin: 0;
+  font-size: 2.5rem;
+}
+
+h2 {
+  margin-bottom: 10px;
+}
+
+#notes-section {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Note Input Section */
+#note-input-section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+textarea {
+  width: 100%;
+  padding: 15px;
+  border: 2px solid #007acc;
+  border-radius: 5px;
+  font-size: 1.1rem;
+  resize: none;
+  height: 120px;
+}
+
+#category-input {
+  width: 150px;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 1.1rem;
+  border: 2px solid #007acc;
+}
+
+button {
+  padding: 12px;
+  background-color: #007acc;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #005f99;
+}
+
+/* Notes List */
+#note-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+/* Individual Note Card */
+.note-card {
+  background-color: #f9f9f9;
+  border: 2px solid #ddd;
+  border-radius: 10px;
+  padding: 20px;
+  position: relative;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.note-category {
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: #007acc;
+  margin-bottom: 5px;
+}
+
+.note-content {
+  font-size: 1.1rem;
+  margin-bottom: 10px;
+}
+
+.note-actions {
+  display: flex;
+  justify-content: space-between;
+}
+
+.note-actions button {
+  padding: 8px 10px;
+  font-size: 0.9rem;
+  border-radius: 5px;
+}
+
+.edit-btn {
+  background-color: #ffa500;
+}
+
+.delete-btn {
+  background-color: red;
+  color: white;
+}
+
+.edit-btn:hover {
+  background-color: #e69500;
+}
+
+.delete-btn:hover {
+  background-color: darkred;
+}
+
+/* Responsive */
+@media (max-width: 600px) {
+  #note-container {
+      grid-template-columns: 1fr;
+  }
+}

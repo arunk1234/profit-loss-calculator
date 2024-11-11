@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Basic Meta Tags -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profit Calculator with Target Price and Target Profit</title>
+    <meta name="description" content="An easy-to-use profit calculator that helps you calculate profit based on price at investment, amount invested, target price, and target profit. Perfect for quick financial insights.">
+
+    <!-- Open Graph Meta Tags for Social Media -->
+    <meta property="og:title" content="Profit Calculator with Target Price and Target Profit">
+    <meta property="og:description" content="Use this profit calculator to calculate profit based on investment details, including target price and profit goals.">
+    <meta property="og:image" content="https://yourwebsite.com/profit-calculator-image.jpg"> <!-- Replace with actual image URL -->
+    <meta property="og:url" content="https://yourwebsite.com/profit-calculator"> <!-- Replace with actual page URL -->
+    <meta property="og:type" content="website">
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Profit Calculator with Target Price and Target Profit">
+    <meta name="twitter:description" content="Quickly calculate profit or loss with this user-friendly profit calculator.">
+
+    <!-- Canonical Link -->
+    <link rel="canonical" href="https://arunk1234.github.io/Utils/">
+
+
+    <!-- Robots Tag (Controls Indexing) -->
+    <meta name="robots" content="index, follow">
+
+    <!-- Favicon -->
+    <link rel="icon" href="favicon.ico" type="image/x-icon">
+
+
+    <style>
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f4f4f9;
+        }
+        .calculator {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            max-width: 100%;
+            width: 90%;
+            text-align: center;
+        }
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 1em;
+        }
+        button {
+            padding: 12px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 1em;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+        .result {
+            margin-top: 20px;
+            overflow-x: auto;
+        }
+
+        /* Responsive Table */
+        table {
+            width: 100%;
+            margin-top: 10px;
+            border-collapse: collapse;
+            min-width: 300px;
+        }
+        table, th, td {
+            border: 1px solid #ccc;
+        }
+        th, td {
+            padding: 10px;
+            text-align: center;
+            font-size: 0.9em;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .highlight {
+            background-color: #e0f7fa;
+        }
+        @media (max-width: 600px) {
+            .calculator {
+                padding: 15px;
+            }
+            input[type="number"], button {
+                padding: 10px;
+                font-size: 0.9em;
+            }
+            th, td {
+                padding: 8px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="calculator">
+    <h2>Profit Calculator with Target Price and Target Profit</h2>
+    <label for="priceAtInvestment">Price at Investment:</label>
+    <input type="number" id="priceAtInvestment" placeholder="Enter price at investment" step="0.01" required inputmode="decimal">
+
+    <label for="amountInvested">Amount Invested:</label>
+    <input type="number" id="amountInvested" placeholder="Enter amount invested" step="0.01" required inputmode="decimal">
+
+    <label for="targetPrice">Target Price (optional):</label>
+    <input type="number" id="targetPrice" placeholder="Enter target price" step="0.01" inputmode="decimal">
+
+    <label for="targetProfit">Target Profit (optional):</label>
+    <input type="number" id="targetProfit" placeholder="Enter target profit" step="0.01" inputmode="decimal">
+
+    <button onclick="generateProfitTable()">Calculate Profit</button>
+
+    <div class="result" id="result"></div>
+</div>
+
+<script>
+    function generateProfitTable() {
+        const priceAtInvestment = parseFloat(document.getElementById("priceAtInvestment").value);
+        const amountInvested = parseFloat(document.getElementById("amountInvested").value);
+        const targetPrice = parseFloat(document.getElementById("targetPrice").value);
+        const targetProfit = parseFloat(document.getElementById("targetProfit").value);
+
+        if (isNaN(priceAtInvestment) || isNaN(amountInvested) || priceAtInvestment <= 0 || amountInvested <= 0) {
+            document.getElementById("result").innerText = "Please enter valid positive numbers for price at investment and amount invested.";
+            return;
+        }
+
+        const quantity = amountInvested / priceAtInvestment;
+
+        function formatDollar(amount) {
+            return amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+
+        let resultHTML = "";
+
+        if (!isNaN(targetProfit) && targetProfit > 0) {
+            const requiredPrice = priceAtInvestment + (targetProfit / quantity);
+            resultHTML += `
+                <table>
+                    <tr>
+                        <th>Target Profit</th>
+                        <th>Target Price Required</th>
+                    </tr>
+                    <tr style="background-color: #c8e6c9; font-weight: bold;">
+                        <td>$${formatDollar(targetProfit)}</td>
+                        <td>$${formatDollar(requiredPrice)}</td>
+                    </tr>
+                </table>
+            `;
+        } else if (!isNaN(targetPrice) && targetPrice > 0) {
+            const profitOrLoss = quantity * (targetPrice - priceAtInvestment);
+            resultHTML += `
+                <table>
+                    <tr>
+                        <th>Target Price</th>
+                        <th>Profit/Loss</th>
+                    </tr>
+                    <tr style="background-color: #c8e6c9; font-weight: bold;">
+                        <td>$${formatDollar(targetPrice)}</td>
+                        <td>${profitOrLoss >= 0 ? '$' : '-$'}${formatDollar(Math.abs(profitOrLoss))}</td>
+                    </tr>
+                </table>
+            `;
+        } else {
+            resultHTML += `
+                <table>
+                    <tr>
+                        <th>Price Increase (0.1 cents)</th>
+                        <th>New Price</th>
+                        <th>Profit</th>
+                    </tr>
+            `;
+
+            for (let i = 1; i <= 20; i++) {
+                const increaseInDollars = i * 0.001;
+                const newPrice = priceAtInvestment + increaseInDollars;
+                const profit = quantity * increaseInDollars;
+
+                const rowClass = (i % 5 === 0) ? "highlight" : "";
+
+                resultHTML += `
+                    <tr class="${rowClass}">
+                        <td>${(i * 0.1).toFixed(1)} cent(s)</td>
+                        <td>$${formatDollar(newPrice)}</td>
+                        <td>$${formatDollar(profit)}</td>
+                    </tr>
+                `;
+            }
+
+            resultHTML += "</table>";
+        }
+
+        document.getElementById("result").innerHTML = resultHTML;
+    }
+</script>
+
+</body>
+</html>
