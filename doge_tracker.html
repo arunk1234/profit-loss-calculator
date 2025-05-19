@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DOGE Investment Tracker</title>
+    <title>Doge Investment Tracker</title>
     <style>
         body {
             font-family: 'Roboto', sans-serif;
@@ -35,6 +35,26 @@
             width: 320px;
             text-align: center;
             color: #333;
+            animation: cardFadeInPop 0.7s cubic-bezier(0.23, 1, 0.32, 1);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .card:hover {
+            transform: translateY(-4px) scale(1.03);
+            box-shadow: 0 12px 24px rgba(0,0,0,0.18);
+        }
+        @keyframes cardFadeInPop {
+            0% {
+                opacity: 0;
+                transform: scale(0.95) translateY(20px);
+            }
+            60% {
+                opacity: 1;
+                transform: scale(1.02) translateY(-4px);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
         }
         .card h2 {
             font-size: 1.5rem;
@@ -53,11 +73,31 @@
             color: #dc3545;
             font-weight: bold;
         }
+        @media (max-width: 500px) {
+            body {
+                padding: 0 4px;
+            }
+            .card {
+                width: 98vw;
+                min-width: 0;
+                padding: 12px;
+                font-size: 0.95rem;
+            }
+            header h1 {
+                font-size: 1.5rem;
+            }
+            .card h2 {
+                font-size: 1.1rem;
+            }
+            .card p {
+                font-size: 0.95rem;
+            }
+        }
     </style>
 </head>
 <body>
     <header>
-        <h1>DOGE Investment Tracker</h1>
+        <h1>Dogecoin  Tracker</h1>
     </header>
     <div id="portfolio">
         <!-- Cards will be dynamically inserted here -->
@@ -73,18 +113,25 @@
 
         // Function to create a card
         function createCard(summary, index, currentPrice) {
-            const investedAmount = (summary.quantity * summary.purchasePrice).toFixed(2);
-            const profit = currentPrice ? ((currentPrice * summary.quantity) - investedAmount).toFixed(2) : 'Calculating...';
-            const profitClass = profit > 0 ? 'profit' : 'loss';
-
+            const invested = summary.quantity * summary.purchasePrice;
+            const investedAmount = invested.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            let profit = 'Calculating...';
+            let percent = '';
+            let profitClass = '';
+            if (currentPrice) {
+                const profitValue = (currentPrice * summary.quantity) - invested;
+                profit = profitValue.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+                percent = invested !== 0 ? ((profitValue / invested) * 100).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}) + '%' : '';
+                profitClass = profitValue > 0 ? 'profit' : 'loss';
+            }
             return `
                 <div class="card">
                     <h2>DOGE Portfolio Summary ${index + 1}</h2>
-                    <p><strong>DOGE Quantity:</strong> ${summary.quantity}</p>
-                    <p><strong>Buy Price:</strong> $${summary.purchasePrice}</p>
+                    <p><strong>DOGE Quantity:</strong> ${summary.quantity.toLocaleString()}</p>
+                    <p><strong>Buy Price:</strong> $${summary.purchasePrice.toLocaleString(undefined, {minimumFractionDigits: 4, maximumFractionDigits: 4})}</p>
                     <p><strong>Invested Amount:</strong> $${investedAmount}</p>
-                    <p><strong>Current Price:</strong> ${currentPrice ? `$${currentPrice}` : 'Loading...'}</p>
-                    <p class="${currentPrice ? profitClass : ''}"><strong>Profit:</strong> ${profit}</p>
+                    <p><strong>Current Price:</strong> ${currentPrice ? `$${Number(currentPrice).toLocaleString(undefined, {minimumFractionDigits: 4, maximumFractionDigits: 4})}` : 'Loading...'}</p>
+                    <p class="${currentPrice ? profitClass : ''}"><strong>Profit:</strong> ${profit !== 'Calculating...' ? '$' + profit + (percent ? ` (${percent})` : '') : profit}</p>
                 </div>
             `;
         }
