@@ -4,109 +4,356 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Doge Investment Tracker</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Roboto', sans-serif;
+        :root {
+            --primary-dark: #0f2b5b;
+            --primary: #1e3c72;
+            --primary-light: #4776c9;
+            --accent: #ffc119;
+            --accent-light: #ffcc00;
+            --success: #19a95c;
+            --error: #e04c4c;
+            --background: #f0f5ff;
+            --text: #203354;
+            --card-bg: rgba(255, 255, 255, 0.85);
+            --glass-bg: rgba(255, 255, 255, 0.18);
+            --glass-border: rgba(255, 255, 255, 0.25);
+            --glass-shadow: rgba(31, 38, 135, 0.15);
+            --shadow-soft: rgba(0, 28, 113, 0.08);
+            --shadow-strong: rgba(17, 24, 39, 0.18);
+            --transition-speed: 0.3s;
+            --dropdown-active: #0a2048;
+            --dropdown-hover: #1d4080;
+            --dropdown-border: rgba(255, 255, 255, 0.6);
+            --dropdown-text: #ffffff;
+            --dropdown-bg: #143264;
+            --dropdown-selected-bg: #1c3f7a;
+            --dropdown-selected-text: #ffffff;
+            --dropdown-item-hover: #264e8d;
+        }
+
+        * {
             margin: 0;
             padding: 0;
-            background: linear-gradient(135deg, #1e3c72, #2a5298);
-            color: #fff;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: radial-gradient(ellipse at top, #1e3c72, #0c1f3d), 
+                        linear-gradient(135deg, #1e3c72, #2a5298);
+            background-attachment: fixed;
+            color: var(--text);
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 100vh;
+            padding: 1.5rem 0.75rem;
+            line-height: 1.5;
         }
+
         header {
             text-align: center;
-            margin-bottom: 20px;
+            width: 100%;
+            margin-bottom: 1.5rem;
+            animation: fadeIn 0.5s ease-out;
         }
+
         header h1 {
             font-size: 2.1rem;
-            margin: 0;
-            color: #ffcc00;
+            font-weight: 700;
+            background: linear-gradient(90deg, var(--accent), var(--accent-light));
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            text-shadow: 0 1px 20px rgba(255, 204, 0, 0.15);
+            letter-spacing: -0.5px;
         }
-        /* Redesigned summary table for modern, professional look */
+
+        .subtitle {
+            color: rgba(255, 255, 255, 0.85);
+            font-size: 1rem;
+            margin-top: 0.25rem;
+            font-weight: 500;
+        }
+
+        /* Glassmorphism container */
         #portfolio {
             width: 100%;
             max-width: 540px;
-            margin: 0 auto;
-            background: rgba(255,255,255,0.10);
-            border-radius: 18px;
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
-            padding: 24px 8px 18px 8px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 10px 30px var(--glass-shadow);
+            padding: 1.5rem;
+            animation: slideUpFade 0.6s ease-out;
+            transition: all var(--transition-speed) ease;
         }
+
+        .select-container {
+            position: relative;
+            margin-bottom: 1.25rem;
+        }
+
+        .select-label {
+            display: block;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Custom dropdown styling for better visibility */
+        .portfolio-dropdown {
+            position: relative;
+            width: 100%;
+            margin-bottom: 1.25rem;
+            z-index: 100;
+        }
+        
+        .dropdown-label {
+            display: block;
+            color: rgba(255, 255, 255, 0.95);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        }
+        
+        .dropdown-header {
+            padding: 0.85rem 1rem;
+            border-radius: 12px;
+            border: 2px solid var(--dropdown-border);
+            background: var(--dropdown-bg);
+            color: var(--dropdown-text);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.25);
+            transition: all 0.2s ease;
+        }
+        
+        .dropdown-header:hover {
+            background: var(--dropdown-hover);
+            border-color: var(--accent-light);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        }
+        
+        .dropdown-header.active {
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+            background: var(--dropdown-active);
+            border-color: var(--accent);
+        }
+        
+        .dropdown-items {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            width: 100%;
+            margin-top: -2px;
+            max-height: 0;
+            overflow: hidden;
+            background: var(--dropdown-active);
+            border-bottom-left-radius: 12px;
+            border-bottom-right-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            transition: max-height 0.3s ease, border 0.2s ease;
+            border-left: 2px solid transparent;
+            border-right: 2px solid transparent;
+            border-bottom: 2px solid transparent;
+            z-index: 99;
+        }
+        
+        .dropdown-items.active {
+            max-height: 200px;
+            border-color: var(--accent);
+        }
+        
+        .dropdown-item {
+            padding: 0.85rem 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--dropdown-text);
+            font-weight: 500;
+        }
+        
+        .dropdown-item:hover {
+            background: var(--dropdown-item-hover);
+        }
+        
+        .dropdown-item.selected {
+            background: var(--dropdown-selected-bg);
+            color: var(--dropdown-selected-text);
+            font-weight: 600;
+            position: relative;
+        }
+        
+        .dropdown-item.selected:before {
+            content: "✓";
+            position: absolute;
+            right: 1rem;
+            color: var(--accent-light);
+        }
+        
+        .dropdown-chevron {
+            color: var(--accent-light);
+            font-weight: bold;
+            transition: transform 0.3s ease;
+            margin-left: 0.5rem;
+        }
+        
+        .dropdown-chevron.active {
+            transform: rotate(180deg);
+        }
+        
+        /* Hide the original select element */
+        #portfolio-select {
+            display: none;
+        }
+        
+        /* Keep the container for backward compatibility */
+        .select-container {
+            display: none;
+        }
+        
+        /* Table styles */
         #summary-table {
             width: 100%;
             border-collapse: separate;
             border-spacing: 0;
-            background: rgba(255,255,255,0.97);
-            border-radius: 14px;
+            background: var(--card-bg);
+            border-radius: 16px;
             overflow: hidden;
-            box-shadow: 0 2px 8px rgba(30,60,114,0.10);
+            box-shadow: 0 8px 20px var(--shadow-soft);
+            transition: all var(--transition-speed) ease;
         }
+
         #summary-table thead th {
-            background: #1e3c72;
-            color: #ffcc00;
-            font-size: 1.01rem;
-            font-weight: 700;
-            padding: 12px 0 10px 0;
+            background: var(--dropdown-active);
+            color: var(--accent-light);
+            font-size: 1.05rem;
+            font-weight: 600;
+            padding: 1rem 0.75rem;
             border: none;
             letter-spacing: 0.5px;
+            text-align: left;
+            text-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
         }
+
+        #summary-table thead th:first-child {
+            border-top-left-radius: 16px;
+            padding-left: 1.5rem;
+        }
+
+        #summary-table thead th:last-child {
+            border-top-right-radius: 16px;
+            text-align: center;
+        }
+
         #summary-table td {
-            padding: 10px 4px;
-            font-size: 0.99rem;
-            color: #1e3c72;
-            background: none;
+            padding: 0.9rem 0.75rem;
+            font-size: 1rem;
+            color: var(--text);
             border: none;
+            transition: all var(--transition-speed) ease;
         }
+
+        #summary-table tr:last-child td:first-child {
+            border-bottom-left-radius: 16px;
+        }
+
+        #summary-table tr:last-child td:last-child {
+            border-bottom-right-radius: 16px;
+        }
+
         #summary-table .card-label {
             font-weight: 600;
-            color: #2a5298;
+            color: var(--primary);
             text-align: left;
             width: 40%;
+            padding-left: 1.5rem;
         }
+
         #summary-table .card-value {
             text-align: center;
             width: 60%;
             font-variant-numeric: tabular-nums;
+            font-weight: 500;
+            padding-right: 1.5rem;
         }
+
         #summary-table tbody tr:nth-child(even) td {
-            background: #f3f6fa;
+            background: rgba(240, 245, 255, 0.9);
         }
+
         #summary-table tbody tr:nth-child(odd) td {
-            background: #ffffff;
+            background: rgba(255, 255, 255, 0.98);
         }
+
         #summary-table tr.profit-row td {
-            background: #eafbe7 !important;
+            background: rgba(225, 249, 220, 0.95) !important;
             font-weight: 700;
             font-size: 1.08rem;
+            border-top: 1px solid rgba(25, 169, 92, 0.15);
         }
+
         #summary-table tr.loss-row td {
-            background: #fbeaea !important;
+            background: rgba(249, 225, 225, 0.95) !important;
             font-weight: 700;
             font-size: 1.08rem;
+            border-top: 1px solid rgba(224, 76, 76, 0.15);
         }
+
         #summary-table tr.total-row td {
-            background: #f7faff !important;
-            font-weight: 800;
+            background: rgba(237, 244, 255, 0.98) !important;
+            font-weight: 700;
             font-size: 1.12rem;
-            border-bottom: none;
+            border-top: 1px solid rgba(30, 60, 114, 0.15);
         }
+
         .profit {
-            color: #1ca94e;
+            color: var(--success);
             font-weight: 700;
         }
+
         .loss {
-            color: #e23c3c;
+            color: var(--error);
             font-weight: 700;
         }
-        #portfolio-select {
-            width: 100%;
-            max-width: 320px;
-            box-sizing: border-box;
+
+        /* Edit buttons */
+        .edit-btn {
+            background: rgba(20, 50, 100, 0.12);
+            border: 1px solid rgba(30, 60, 114, 0.15);
+            color: var(--primary);
+            cursor: pointer;
+            font-size: 0.85rem;
+            padding: 0.3rem 0.7rem;
+            margin-left: 0.5rem;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            vertical-align: 1px;
         }
+
+        .edit-btn:hover {
+            background: rgba(30, 60, 114, 0.2);
+            border-color: rgba(30, 60, 114, 0.25);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
         /* Modal styles */
         .modal {
             display: none;
@@ -115,115 +362,271 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0,0,0,0.7);
+            background-color: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
             z-index: 10;
             align-items: center;
             justify-content: center;
+            animation: fadeIn 0.3s ease;
         }
+
         .modal-content {
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 12px;
+            background: var(--card-bg);
+            padding: 1.75rem;
+            border-radius: 20px;
             width: 90%;
-            max-width: 350px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            max-width: 360px;
+            box-shadow: 0 15px 35px var(--shadow-strong);
+            animation: scaleIn 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.15);
         }
+
         .modal-content h3 {
-            color: #1e3c72;
+            color: var(--primary-dark);
             margin-top: 0;
+            margin-bottom: 1.25rem;
+            font-size: 1.3rem;
+            font-weight: 600;
         }
+
         .input-group {
-            margin-bottom: 15px;
+            margin-bottom: 1.25rem;
         }
+
         .input-group label {
             display: block;
-            margin-bottom: 5px;
-            color: #2a5298;
-            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+            font-weight: 500;
+            font-size: 0.95rem;
         }
+
         .input-group input {
             width: 100%;
-            padding: 8px;
-            border: 1px solid #bfc9d9;
-            border-radius: 4px;
+            padding: 0.75rem 1rem;
+            border: 1px solid rgba(191, 201, 217, 0.6);
+            border-radius: 10px;
             font-size: 1rem;
+            font-family: inherit;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05) inset;
         }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--primary-light);
+            box-shadow: 0 0 0 3px rgba(71, 118, 201, 0.2);
+        }
+
         .button-group {
             display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
+            justify-content: flex-end;
+            gap: 0.75rem;
+            margin-top: 1.5rem;
         }
+
         .modal-btn {
-            padding: 8px 16px;
-            border-radius: 4px;
+            padding: 0.75rem 1.25rem;
+            border-radius: 10px;
             border: none;
             cursor: pointer;
             font-weight: 600;
+            font-family: inherit;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
         }
+
         .save-btn {
-            background-color: #1ca94e;
+            background-color: var(--success);
             color: white;
         }
+
+        .save-btn:hover {
+            background-color: #128a4b;
+            transform: translateY(-1px);
+        }
+
         .cancel-btn {
-            background-color: #e23c3c;
-            color: white;
+            background-color: #e6e6e6;
+            color: #666;
         }
-        .edit-btn {
-            background: none;
-            border: none;
-            color: #2a5298;
-            cursor: pointer;
-            font-size: 0.9rem;
-            padding: 0;
-            margin-left: 8px;
-            text-decoration: underline;
-            opacity: 0.8;
+
+        .cancel-btn:hover {
+            background-color: #d9d9d9;
         }
-        .edit-btn:hover {
-            opacity: 1;
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
+
+        @keyframes slideUpFade {
+            from { 
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes scaleIn {
+            from { 
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to { 
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        /* Responsive design */
         @media (max-width: 600px) {
+            body {
+                padding: 1rem 0.5rem;
+            }
+            
+            header {
+                margin-bottom: 1.25rem;
+            }
+            
             header h1 {
-                font-size: 1.3rem;
+                font-size: 1.5rem;
             }
+            
+            .subtitle {
+                font-size: 0.9rem;
+            }
+            
             #portfolio {
-                padding: 8px 0 8px 0;
-                max-width: 99vw;
+                padding: 1rem;
+                border-radius: 16px;
+                max-width: 100%;
             }
+            
             #summary-table {
-                font-size: 0.93rem;
-                border-radius: 8px;
+                border-radius: 12px;
             }
-            #summary-table thead th, #summary-table td {
-                font-size: 0.93rem;
-                padding: 7px 2px;
+            
+            #summary-table thead th {
+                font-size: 0.95rem;
+                padding: 0.8rem 0.5rem;
             }
+            
+            #summary-table thead th:first-child {
+                padding-left: 1rem;
+            }
+            
+            #summary-table td {
+                padding: 0.7rem 0.5rem;
+                font-size: 0.95rem;
+            }
+            
             #summary-table .card-label {
-                width: 44%;
-                font-size: 0.97rem;
+                width: 42%;
+                padding-left: 1rem;
             }
+            
             #summary-table .card-value {
-                width: 56%;
-                font-size: 0.97rem;
+                width: 58%;
+                padding-right: 1rem;
             }
-            #portfolio-select {
-                font-size: 0.98rem;
-                padding: 5px 8px;
-                max-width: 99vw;
+            
+            .edit-btn {
+                font-size: 0.8rem;
+                padding: 0.15rem 0.4rem;
+            }
+            
+            .modal-content {
+                padding: 1.25rem;
+            }
+            
+            .modal-content h3 {
+                font-size: 1.2rem;
+                margin-bottom: 1rem;
+            }
+            
+            .input-group {
+                margin-bottom: 1rem;
+            }
+            
+            .input-group input {
+                padding: 0.7rem 0.9rem;
+            }
+            
+            .button-group {
+                margin-top: 1.25rem;
+            }
+            
+            .modal-btn {
+                padding: 0.65rem 1rem;
+                font-size: 0.9rem;
+            }
+            
+            .dropdown-label {
+                font-size: 0.95rem;
+            }
+            
+            .dropdown-header {
+                padding: 0.7rem 0.9rem;
+                font-size: 0.95rem;
+            }
+            
+            .dropdown-item {
+                padding: 0.65rem 0.9rem;
+                font-size: 0.95rem;
+            }
+        }
+        
+        /* Even smaller screens */
+        @media (max-width: 350px) {
+            header h1 {
+                font-size: 1.35rem;
+            }
+            
+            #portfolio {
+                padding: 0.75rem;
+            }
+            
+            #summary-table .card-label,
+            #summary-table .card-value {
+                font-size: 0.9rem;
             }
         }
     </style>
 </head>
 <body>
     <header>
-        <h1>Dogecoin  Tracker</h1>
+        <h1>Dogecoin Tracker</h1>
+        <div class="subtitle">Live investment tracker <span id="loading-indicator" style="display:none; font-size: 0.85rem; margin-left: 5px; opacity: 0.9;">⟳ updating...</span></div>
     </header>
     <div id="portfolio">
-        <label for="portfolio-select" style="font-weight:600;margin-bottom:8px;display:block;color:#2a5298;">Select Portfolio:</label>
-        <select id="portfolio-select" style="margin-bottom:18px;padding:6px 12px;border-radius:6px;border:1px solid #ccc;font-size:1.05rem;">
-            <option value="0">Portfolio 1</option>
-            <option value="1">Portfolio 2</option>
-        </select>
+        <!-- Replace select with custom dropdown -->
+        <div class="select-container">
+            <label for="portfolio-select" class="select-label">Select Portfolio</label>
+            <select id="portfolio-select">
+                <option value="0">Portfolio 1</option>
+                <option value="1">Portfolio 2</option>
+            </select>
+        </div>
+        
+        <!-- Custom dropdown UI -->
+        <div class="portfolio-dropdown">
+            <label class="dropdown-label">Select Portfolio</label>
+            <div class="dropdown-header">
+                <span class="dropdown-selected">Portfolio 1</span>
+                <span class="dropdown-chevron">▼</span>
+            </div>
+            <div class="dropdown-items">
+                <div class="dropdown-item selected" data-value="0">Portfolio 1</div>
+                <div class="dropdown-item" data-value="1">Portfolio 2</div>
+            </div>
+        </div>
+        
         <table id="summary-table" class="card-table">
             <thead>
                 <tr>
@@ -257,21 +660,196 @@
     </div>
 
     <script>
-        const dogeSummaries = JSON.parse(localStorage.getItem('dogeSummaries')) || [
-            { quantity: 72780, purchasePrice: 0.354 },
-            { quantity: 31629, purchasePrice: 0.1886 },
+        // Default portfolio data (will be overridden by localStorage if available)
+        let portfolios = [
+            {
+                name: "Portfolio 1",
+                quantity: 72780, // Restored from original
+                purchasePrice: 0.354 // Restored from original
+            },
+            {
+                name: "Portfolio 2", 
+                quantity: 31629, // Restored from original
+                purchasePrice: 0.1886 // Restored from original
+            }
         ];
 
-        const portfolioDiv = document.getElementById('portfolio');
+        // Current selected portfolio index
+        let currentPortfolioIndex = 0;
+        
+        // Current DOGE price
+        let currentPrice = null;
+        let priceUpdateAttempts = 0;
+
+        // Elements
+        const portfolioSelect = document.getElementById('portfolio-select');
+        const summaryTable = document.getElementById('summary-table');
+        const summaryTbody = document.getElementById('summary-tbody');
+        const portfolioHeader = document.getElementById('portfolio-header');
         const modal = document.getElementById('edit-modal');
         const modalTitle = document.getElementById('modal-title');
         const quantityInput = document.getElementById('edit-quantity');
         const priceInput = document.getElementById('edit-price');
-        const cancelBtn = document.getElementById('cancel-edit');
-        const saveBtn = document.getElementById('save-edit');
+        const saveButton = document.getElementById('save-edit');
+        const cancelButton = document.getElementById('cancel-edit');
+        const loadingIndicator = document.getElementById('loading-indicator');
         
-        let currentEditingPortfolio = 0;
-        let lastKnownPrice = null;
+        // Custom dropdown elements
+        const dropdownHeader = document.querySelector('.dropdown-header');
+        const dropdownItems = document.querySelector('.dropdown-items');
+        const dropdownSelected = document.querySelector('.dropdown-selected');
+        const dropdownChevron = document.querySelector('.dropdown-chevron');
+        const dropdownOptions = document.querySelectorAll('.dropdown-item');
+        
+        // Current editing field (quantity or price)
+        let currentEditField = null;
+
+        // Load saved data from localStorage if available
+        function loadSavedData() {
+            const savedPortfolios = localStorage.getItem('dogePortfolios');
+            if (savedPortfolios) {
+                try {
+                    portfolios = JSON.parse(savedPortfolios);
+                } catch (e) {
+                    console.error('Error loading saved portfolios:', e);
+                    // Restore from old format if possible
+                    try {
+                        const oldFormat = localStorage.getItem('dogeSummaries');
+                        if (oldFormat) {
+                            const oldData = JSON.parse(oldFormat);
+                            if (Array.isArray(oldData) && oldData.length >= 2) {
+                                portfolios = [
+                                    {
+                                        name: "Portfolio 1",
+                                        quantity: oldData[0].quantity,
+                                        purchasePrice: oldData[0].purchasePrice
+                                    },
+                                    {
+                                        name: "Portfolio 2",
+                                        quantity: oldData[1].quantity,
+                                        purchasePrice: oldData[1].purchasePrice
+                                    }
+                                ];
+                                // Save in new format
+                                saveData();
+                            }
+                        }
+                    } catch (oldFormatError) {
+                        console.error('Could not migrate old format:', oldFormatError);
+                    }
+                }
+            } else {
+                // Try loading from old format if new format isn't available
+                try {
+                    const oldFormat = localStorage.getItem('dogeSummaries');
+                    if (oldFormat) {
+                        const oldData = JSON.parse(oldFormat);
+                        if (Array.isArray(oldData) && oldData.length >= 2) {
+                            portfolios = [
+                                {
+                                    name: "Portfolio 1",
+                                    quantity: oldData[0].quantity,
+                                    purchasePrice: oldData[0].purchasePrice
+                                },
+                                {
+                                    name: "Portfolio 2",
+                                    quantity: oldData[1].quantity,
+                                    purchasePrice: oldData[1].purchasePrice
+                                }
+                            ];
+                            // Save in new format
+                            saveData();
+                        }
+                    }
+                } catch (oldFormatError) {
+                    console.error('Could not load old format:', oldFormatError);
+                }
+            }
+
+            const savedIndex = localStorage.getItem('currentPortfolioIndex');
+            if (savedIndex !== null) {
+                currentPortfolioIndex = parseInt(savedIndex);
+            }
+        }
+
+        // Save current data to localStorage
+        function saveData() {
+            localStorage.setItem('dogePortfolios', JSON.stringify(portfolios));
+            localStorage.setItem('currentPortfolioIndex', currentPortfolioIndex.toString());
+        }
+
+        // Fetch current DOGE price from Binance API
+        async function fetchCurrentPrice() {
+            loadingIndicator.style.display = 'inline';
+            priceUpdateAttempts++;
+            
+            try {
+                // Try Coinbase API (more Safari-friendly)
+                const response = await fetch('https://api.coinbase.com/v2/prices/DOGE-USD/spot');
+                const data = await response.json();
+                
+                if (data && data.data && data.data.amount) {
+                    currentPrice = parseFloat(data.data.amount);
+                    console.log('Price fetched successfully from Coinbase:', currentPrice);
+                    priceUpdateAttempts = 0; // Reset counter on success
+                } else {
+                    throw new Error('Invalid Coinbase response format');
+                }
+            } catch (error) {
+                console.error('Error fetching DOGE price from Coinbase:', error);
+                
+                try {
+                    // Try CoinGecko API as fallback (also Safari-friendly)
+                    const fallbackResponse = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=dogecoin&vs_currencies=usd');
+                    const fallbackData = await fallbackResponse.json();
+                    
+                    if (fallbackData && fallbackData.dogecoin && fallbackData.dogecoin.usd) {
+                        currentPrice = parseFloat(fallbackData.dogecoin.usd);
+                        console.log('Price fetched from CoinGecko fallback:', currentPrice);
+                        priceUpdateAttempts = 0; // Reset counter on success
+                    } else {
+                        throw new Error('Invalid CoinGecko response');
+                    }
+                } catch (fallbackError) {
+                    console.error('Error fetching from fallback sources:', fallbackError);
+                    
+                    // Last resort - try with fetch options for CORS issues
+                    try {
+                        const corsProxyUrl = 'https://api.allorigins.win/get?url=';
+                        const encodedUrl = encodeURIComponent('https://api.binance.com/api/v3/ticker/price?symbol=DOGEUSDT');
+                        const proxyResponse = await fetch(corsProxyUrl + encodedUrl);
+                        const proxyData = await proxyResponse.json();
+                        
+                        if (proxyData && proxyData.contents) {
+                            const binanceData = JSON.parse(proxyData.contents);
+                            if (binanceData && binanceData.price) {
+                                currentPrice = parseFloat(binanceData.price);
+                                console.log('Price fetched through proxy:', currentPrice);
+                                priceUpdateAttempts = 0;
+                            } else {
+                                throw new Error('Invalid proxy data');
+                            }
+                        } else {
+                            throw new Error('Invalid proxy response');
+                        }
+                    } catch (proxyError) {
+                        console.error('All API attempts failed:', proxyError);
+                        
+                        if (priceUpdateAttempts > 3) {
+                            // After multiple failed attempts, use a fallback price
+                            currentPrice = currentPrice || 0.1224; // Use last known price or fallback
+                            console.warn('Using fallback price after multiple failures:', currentPrice);
+                        }
+                    }
+                }
+            } finally {
+                loadingIndicator.style.display = 'none';
+                updateDisplay();
+                
+                // Schedule next update - longer interval if we're using fallback price
+                setTimeout(fetchCurrentPrice, priceUpdateAttempts > 3 ? 120000 : 60000);
+            }
+        }
 
         // Function to create table rows for a single portfolio
         function createTableRowsSingle(summary, currentPrice) {
@@ -300,112 +878,218 @@
                         const profitValue = (currentPrice * summary.quantity) - invested;
                         const percent = invested !== 0 ? ((profitValue / invested) * 100).toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}) : '';
                         const profitClass = profitValue > 0 ? 'profit' : 'loss';
-                        return `<span class="${profitClass}">$${profitValue.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span><br><span style="font-size:0.98em;opacity:0.85;">${percent ? percent + '%' : ''}</span>`;
+                        return `<span class="${profitClass}">$${profitValue.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span><br><span style="font-size:0.9em;opacity:0.85;">${percent ? percent + '%' : ''}</span>`;
                     })(),
+                    isProfit: (() => {
+                        if (!currentPrice) return false;
+                        const invested = summary.quantity * summary.purchasePrice;
+                        return (currentPrice * summary.quantity) > invested;
+                    })()
                 },
                 {
                     label: 'Total Value',
                     value: (() => {
                         if (!currentPrice) return 'Calculating...';
-                        const invested = summary.quantity * summary.purchasePrice;
-                        const profitValue = (currentPrice * summary.quantity) - invested;
-                        const total = invested + profitValue;
-                        const totalClass = profitValue > 0 ? 'profit' : 'loss';
-                        return `<span class="${totalClass}">$${total.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}</span>`;
+                        const currentTotal = currentPrice * summary.quantity;
+                        return `$${currentTotal.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
                     })(),
+                    isTotal: true
                 },
             ];
-            return rows.map(row =>
-                `<tr><td class="card-label">${row.label}</td><td class="card-value">${row.value}</td></tr>`
-            ).join('');
+
+            let html = '';
+            rows.forEach((row, index) => {
+                let rowClass = '';
+                if (index === rows.length - 2 && row.isProfit !== undefined) {
+                    rowClass = row.isProfit ? 'profit-row' : 'loss-row';
+                } else if (index === rows.length - 1) {
+                    rowClass = 'total-row';
+                }
+                html += `<tr class="${rowClass}"><td class="card-label">${row.label}</td><td class="card-value">${row.value}</td></tr>`;
+            });
+            
+            return html;
         }
 
-        // Fetch current DOGE price from Binance API
-        async function fetchDogePrice(selectedIdx = 0) {
-            try {
-                const response = await fetch('https://api.binance.us/api/v3/avgPrice?symbol=DOGEUSDT');
-                const data = await response.json();
-                const currentPrice = parseFloat(data.price).toFixed(4);
-                lastKnownPrice = currentPrice;
-                document.getElementById('summary-tbody').innerHTML = createTableRowsSingle(dogeSummaries[selectedIdx], currentPrice);
-                addEditButtonListeners();
-            } catch (error) {
-                console.error('Error fetching DOGE price:', error);
-                document.getElementById('summary-tbody').innerHTML = '<tr><td colspan="2">Failed to load data. Please try again later.</td></tr>';
-            }
-        }
-
-        // Add event listeners to edit buttons
-        function addEditButtonListeners() {
-            document.querySelectorAll('.edit-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const field = this.dataset.field;
-                    currentEditingPortfolio = parseInt(document.getElementById('portfolio-select').value);
-                    
-                    if (field === 'quantity') {
-                        modalTitle.textContent = `Edit Quantity (Portfolio ${currentEditingPortfolio + 1})`;
-                        quantityInput.value = dogeSummaries[currentEditingPortfolio].quantity;
-                        priceInput.parentElement.style.display = 'none';
-                        quantityInput.parentElement.style.display = 'block';
-                    } else {
-                        modalTitle.textContent = `Edit Buy Price (Portfolio ${currentEditingPortfolio + 1})`;
-                        priceInput.value = dogeSummaries[currentEditingPortfolio].purchasePrice;
-                        quantityInput.parentElement.style.display = 'none';
-                        priceInput.parentElement.style.display = 'block';
-                    }
-                    
-                    modal.style.display = 'flex';
-                });
+        // Update the display based on the current portfolio selection
+        function updateDisplay() {
+            const summary = portfolios[currentPortfolioIndex];
+            portfolioHeader.textContent = summary.name;
+            summaryTbody.innerHTML = createTableRowsSingle(summary, currentPrice);
+            
+            // Update custom dropdown
+            const dropdownSelected = document.querySelector('.dropdown-selected');
+            const dropdownItems = document.querySelectorAll('.dropdown-item');
+            
+            dropdownSelected.textContent = summary.name;
+            dropdownItems.forEach(item => {
+                item.classList.remove('selected');
+                if (item.getAttribute('data-value') === currentPortfolioIndex.toString()) {
+                    item.classList.add('selected');
+                }
             });
         }
 
-        // Close modal
-        cancelBtn.addEventListener('click', function() {
-            modal.style.display = 'none';
-        });
+        // Handle portfolio selection change
+        function handlePortfolioChange() {
+            currentPortfolioIndex = parseInt(portfolioSelect.value);
+            saveData();
+            updateDisplay();
+        }
 
-        // Save changes
-        saveBtn.addEventListener('click', function() {
-            const isQuantityEdit = quantityInput.parentElement.style.display !== 'none';
+        // Handle edit button click
+        function handleEditClick(event) {
+            const field = event.target.dataset.field;
+            currentEditField = field;
             
-            if (isQuantityEdit) {
-                const newQuantity = parseInt(quantityInput.value);
-                if (!isNaN(newQuantity) && newQuantity >= 0) {
-                    dogeSummaries[currentEditingPortfolio].quantity = newQuantity;
-                }
+            const portfolio = portfolios[currentPortfolioIndex];
+            modalTitle.textContent = `Edit ${field === 'quantity' ? 'Quantity' : 'Buy Price'}`;
+            
+            if (field === 'quantity') {
+                quantityInput.value = portfolio.quantity;
+                quantityInput.style.display = 'block';
+                document.querySelector('label[for="edit-quantity"]').style.display = 'block';
+                
+                priceInput.style.display = 'none';
+                document.querySelector('label[for="edit-price"]').style.display = 'none';
             } else {
+                priceInput.value = portfolio.purchasePrice;
+                priceInput.style.display = 'block';
+                document.querySelector('label[for="edit-price"]').style.display = 'block';
+                
+                quantityInput.style.display = 'none';
+                document.querySelector('label[for="edit-quantity"]').style.display = 'none';
+            }
+            
+            modal.style.display = 'flex';
+        }
+
+        // Handle save button click
+        function handleSaveClick() {
+            const portfolio = portfolios[currentPortfolioIndex];
+            
+            if (currentEditField === 'quantity') {
+                const newQuantity = parseFloat(quantityInput.value);
+                if (!isNaN(newQuantity) && newQuantity >= 0) {
+                    portfolio.quantity = newQuantity;
+                }
+            } else if (currentEditField === 'price') {
                 const newPrice = parseFloat(priceInput.value);
                 if (!isNaN(newPrice) && newPrice >= 0) {
-                    dogeSummaries[currentEditingPortfolio].purchasePrice = newPrice;
+                    portfolio.purchasePrice = newPrice;
                 }
             }
             
-            // Save to localStorage
-            localStorage.setItem('dogeSummaries', JSON.stringify(dogeSummaries));
-            
+            saveData();
+            updateDisplay();
+            closeModal();
+        }
+
+        // Close the modal
+        function closeModal() {
             modal.style.display = 'none';
-            document.getElementById('summary-tbody').innerHTML = createTableRowsSingle(dogeSummaries[currentEditingPortfolio], lastKnownPrice);
-            addEditButtonListeners();
-        });
+            currentEditField = null;
+        }
 
-        // Close modal when clicking outside
-        window.addEventListener('click', function(event) {
-            if (event.target === modal) {
-                modal.style.display = 'none';
+        // Handle custom dropdown functionality
+        function setupCustomDropdown() {
+            // Toggle dropdown on click
+            dropdownHeader.addEventListener('click', function() {
+                dropdownItems.classList.toggle('active');
+                dropdownHeader.classList.toggle('active');
+                dropdownChevron.classList.toggle('active');
+            });
+            
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(event) {
+                const isClickInside = dropdownHeader.contains(event.target);
+                
+                if (!isClickInside && dropdownItems.classList.contains('active')) {
+                    dropdownItems.classList.remove('active');
+                    dropdownHeader.classList.remove('active');
+                    dropdownChevron.classList.remove('active');
+                }
+            });
+            
+            // Handle dropdown option selection
+            dropdownOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    // Update selected value
+                    const value = this.dataset.value;
+                    currentPortfolioIndex = parseInt(value);
+                    
+                    // Update UI
+                    dropdownSelected.textContent = this.textContent;
+                    
+                    // Update original select for backward compatibility
+                    portfolioSelect.value = value;
+                    
+                    // Update selected state
+                    dropdownOptions.forEach(opt => opt.classList.remove('selected'));
+                    this.classList.add('selected');
+                    
+                    // Close dropdown
+                    dropdownItems.classList.remove('active');
+                    dropdownHeader.classList.remove('active');
+                    dropdownChevron.classList.remove('active');
+                    
+                    // Update display and save
+                    saveData();
+                    updateDisplay();
+                });
+            });
+        }
+        
+        // Update dropdown state based on current portfolio
+        function updateDropdownState() {
+            const selectedPortfolio = portfolios[currentPortfolioIndex];
+            if (dropdownSelected) {
+                dropdownSelected.textContent = selectedPortfolio.name;
             }
-        });
+            
+            if (dropdownOptions) {
+                dropdownOptions.forEach(option => {
+                    option.classList.remove('selected');
+                    if (option.dataset.value === currentPortfolioIndex.toString()) {
+                        option.classList.add('selected');
+                    }
+                });
+            }
+        }
 
-        // Initial load
-        document.getElementById('summary-tbody').innerHTML = createTableRowsSingle(dogeSummaries[0]);
-        fetchDogePrice(0);
+        // Initialize the application
+        function init() {
+            // Load data from localStorage
+            loadSavedData();
+            
+            // Set up custom dropdown
+            setupCustomDropdown();
+            
+            // Set initial dropdown value
+            portfolioSelect.value = currentPortfolioIndex;
+            updateDropdownState();
+            
+            // Add event listeners
+            portfolioSelect.addEventListener('change', handlePortfolioChange);
+            saveButton.addEventListener('click', handleSaveClick);
+            cancelButton.addEventListener('click', closeModal);
+            
+            // Close modal when clicking outside
+            window.addEventListener('click', (event) => {
+                if (event.target === modal) {
+                    closeModal();
+                }
+            });
+            
+            // Initial display update
+            updateDisplay();
+            
+            // Fetch initial price
+            fetchCurrentPrice();
+        }
 
-        // Dropdown event
-        document.getElementById('portfolio-select').addEventListener('change', function(e) {
-            const idx = parseInt(e.target.value);
-            document.getElementById('portfolio-header').textContent = `Portfolio ${idx + 1}`;
-            document.getElementById('summary-tbody').innerHTML = createTableRowsSingle(dogeSummaries[idx], lastKnownPrice);
-            addEditButtonListeners();
-        });
+        // Start the app when the page is loaded
+        document.addEventListener('DOMContentLoaded', init);
     </script>
 </body>
 </html>
