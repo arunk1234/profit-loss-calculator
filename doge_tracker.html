@@ -6,10 +6,10 @@
     <title>Doge Investment Tracker</title>
     <style>
         body {
-            font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+            font-family: 'Roboto', sans-serif;
             margin: 0;
             padding: 0;
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
             color: #fff;
             display: flex;
             flex-direction: column;
@@ -19,67 +19,44 @@
         }
         header {
             text-align: center;
-            margin-bottom: 28px;
+            margin-bottom: 20px;
         }
         header h1 {
-            font-size: 2.3rem;
+            font-size: 2.1rem;
             margin: 0;
             color: #ffcc00;
-            letter-spacing: 1px;
-            text-shadow: 2px 4px 16px #000a, 0 1px 0 #fff3;
         }
         /* Redesigned summary table for modern, professional look */
         #portfolio {
             width: 100%;
-            max-width: 420px;
+            max-width: 540px;
             margin: 0 auto;
-            background: rgba(255,255,255,0.13);
-            border-radius: 22px;
-            box-shadow: 0 8px 32px 0 rgba(31,38,135,0.22);
-            padding: 32px 16px 24px 16px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        #portfolio-select {
-            width: 100%;
-            max-width: 320px;
-            box-sizing: border-box;
-            margin-bottom: 18px;
-            padding: 10px 14px;
-            border-radius: 8px;
-            border: 1.5px solid #bfc9d9;
-            font-size: 1.13rem;
-            background: #f7faff;
-            color: #2a3a4d;
-            font-weight: 600;
-            transition: border 0.2s;
-        }
-        #portfolio-select:focus {
-            border: 1.5px solid #4a7bdc;
-            outline: none;
+            background: rgba(255,255,255,0.10);
+            border-radius: 18px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.18);
+            padding: 24px 8px 18px 8px;
         }
         #summary-table {
             width: 100%;
             border-collapse: separate;
             border-spacing: 0;
             background: rgba(255,255,255,0.97);
-            border-radius: 16px;
+            border-radius: 14px;
             overflow: hidden;
-            box-shadow: 0 2px 12px rgba(30,60,114,0.13);
+            box-shadow: 0 2px 8px rgba(30,60,114,0.10);
         }
         #summary-table thead th {
-            background: linear-gradient(90deg, #1e3c72 0%, #2a5298 100%);
+            background: #1e3c72;
             color: #ffcc00;
-            font-size: 1.09rem;
+            font-size: 1.01rem;
             font-weight: 700;
-            padding: 15px 0 13px 0;
+            padding: 12px 0 10px 0;
             border: none;
             letter-spacing: 0.5px;
         }
         #summary-table td {
-            padding: 13px 6px;
-            font-size: 1.07rem;
+            padding: 10px 4px;
+            font-size: 0.99rem;
             color: #1e3c72;
             background: none;
             border: none;
@@ -88,11 +65,11 @@
             font-weight: 600;
             color: #2a5298;
             text-align: left;
-            width: 44%;
+            width: 40%;
         }
         #summary-table .card-value {
             text-align: center;
-            width: 56%;
+            width: 60%;
             font-variant-numeric: tabular-nums;
         }
         #summary-table tbody tr:nth-child(even) td {
@@ -124,6 +101,86 @@
         .loss {
             color: #e23c3c;
             font-weight: 700;
+        }
+        #portfolio-select {
+            width: 100%;
+            max-width: 320px;
+            box-sizing: border-box;
+        }
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            z-index: 10;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-content {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 350px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        .modal-content h3 {
+            color: #1e3c72;
+            margin-top: 0;
+        }
+        .input-group {
+            margin-bottom: 15px;
+        }
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+            color: #2a5298;
+            font-weight: 600;
+        }
+        .input-group input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #bfc9d9;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        .modal-btn {
+            padding: 8px 16px;
+            border-radius: 4px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .save-btn {
+            background-color: #1ca94e;
+            color: white;
+        }
+        .cancel-btn {
+            background-color: #e23c3c;
+            color: white;
+        }
+        .edit-btn {
+            background: none;
+            border: none;
+            color: #2a5298;
+            cursor: pointer;
+            font-size: 0.9rem;
+            padding: 0;
+            margin-left: 8px;
+            text-decoration: underline;
+            opacity: 0.8;
+        }
+        .edit-btn:hover {
+            opacity: 1;
         }
         @media (max-width: 600px) {
             header h1 {
@@ -179,23 +236,53 @@
             </tbody>
         </table>
     </div>
+    
+    <!-- Edit Modal -->
+    <div id="edit-modal" class="modal">
+        <div class="modal-content">
+            <h3 id="modal-title">Edit Portfolio</h3>
+            <div class="input-group">
+                <label for="edit-quantity">Quantity:</label>
+                <input type="number" id="edit-quantity" min="0" step="1">
+            </div>
+            <div class="input-group">
+                <label for="edit-price">Buy Price ($):</label>
+                <input type="number" id="edit-price" min="0" step="0.0001">
+            </div>
+            <div class="button-group">
+                <button class="modal-btn cancel-btn" id="cancel-edit">Cancel</button>
+                <button class="modal-btn save-btn" id="save-edit">Save</button>
+            </div>
+        </div>
+    </div>
 
     <script>
-        const dogeSummaries = [
+        const dogeSummaries = JSON.parse(localStorage.getItem('dogeSummaries')) || [
             { quantity: 72780, purchasePrice: 0.354 },
             { quantity: 31629, purchasePrice: 0.1886 },
         ];
+
+        const portfolioDiv = document.getElementById('portfolio');
+        const modal = document.getElementById('edit-modal');
+        const modalTitle = document.getElementById('modal-title');
+        const quantityInput = document.getElementById('edit-quantity');
+        const priceInput = document.getElementById('edit-price');
+        const cancelBtn = document.getElementById('cancel-edit');
+        const saveBtn = document.getElementById('save-edit');
+        
+        let currentEditingPortfolio = 0;
+        let lastKnownPrice = null;
 
         // Function to create table rows for a single portfolio
         function createTableRowsSingle(summary, currentPrice) {
             const rows = [
                 {
                     label: 'Quantity',
-                    value: summary.quantity.toLocaleString(),
+                    value: `${summary.quantity.toLocaleString()} <button class="edit-btn" data-field="quantity">Edit</button>`,
                 },
                 {
                     label: 'Buy Price',
-                    value: '$' + summary.purchasePrice.toLocaleString(undefined, {minimumFractionDigits: 4, maximumFractionDigits: 4}),
+                    value: `$${summary.purchasePrice.toLocaleString(undefined, {minimumFractionDigits: 4, maximumFractionDigits: 4})} <button class="edit-btn" data-field="price">Edit</button>`,
                 },
                 {
                     label: 'Invested Amount',
@@ -239,12 +326,74 @@
                 const response = await fetch('https://api.binance.us/api/v3/avgPrice?symbol=DOGEUSDT');
                 const data = await response.json();
                 const currentPrice = parseFloat(data.price).toFixed(4);
+                lastKnownPrice = currentPrice;
                 document.getElementById('summary-tbody').innerHTML = createTableRowsSingle(dogeSummaries[selectedIdx], currentPrice);
+                addEditButtonListeners();
             } catch (error) {
                 console.error('Error fetching DOGE price:', error);
                 document.getElementById('summary-tbody').innerHTML = '<tr><td colspan="2">Failed to load data. Please try again later.</td></tr>';
             }
         }
+
+        // Add event listeners to edit buttons
+        function addEditButtonListeners() {
+            document.querySelectorAll('.edit-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const field = this.dataset.field;
+                    currentEditingPortfolio = parseInt(document.getElementById('portfolio-select').value);
+                    
+                    if (field === 'quantity') {
+                        modalTitle.textContent = `Edit Quantity (Portfolio ${currentEditingPortfolio + 1})`;
+                        quantityInput.value = dogeSummaries[currentEditingPortfolio].quantity;
+                        priceInput.parentElement.style.display = 'none';
+                        quantityInput.parentElement.style.display = 'block';
+                    } else {
+                        modalTitle.textContent = `Edit Buy Price (Portfolio ${currentEditingPortfolio + 1})`;
+                        priceInput.value = dogeSummaries[currentEditingPortfolio].purchasePrice;
+                        quantityInput.parentElement.style.display = 'none';
+                        priceInput.parentElement.style.display = 'block';
+                    }
+                    
+                    modal.style.display = 'flex';
+                });
+            });
+        }
+
+        // Close modal
+        cancelBtn.addEventListener('click', function() {
+            modal.style.display = 'none';
+        });
+
+        // Save changes
+        saveBtn.addEventListener('click', function() {
+            const isQuantityEdit = quantityInput.parentElement.style.display !== 'none';
+            
+            if (isQuantityEdit) {
+                const newQuantity = parseInt(quantityInput.value);
+                if (!isNaN(newQuantity) && newQuantity >= 0) {
+                    dogeSummaries[currentEditingPortfolio].quantity = newQuantity;
+                }
+            } else {
+                const newPrice = parseFloat(priceInput.value);
+                if (!isNaN(newPrice) && newPrice >= 0) {
+                    dogeSummaries[currentEditingPortfolio].purchasePrice = newPrice;
+                }
+            }
+            
+            // Save to localStorage
+            localStorage.setItem('dogeSummaries', JSON.stringify(dogeSummaries));
+            
+            modal.style.display = 'none';
+            document.getElementById('summary-tbody').innerHTML = createTableRowsSingle(dogeSummaries[currentEditingPortfolio], lastKnownPrice);
+            addEditButtonListeners();
+        });
+
+        // Close modal when clicking outside
+        window.addEventListener('click', function(event) {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
 
         // Initial load
         document.getElementById('summary-tbody').innerHTML = createTableRowsSingle(dogeSummaries[0]);
@@ -254,8 +403,8 @@
         document.getElementById('portfolio-select').addEventListener('change', function(e) {
             const idx = parseInt(e.target.value);
             document.getElementById('portfolio-header').textContent = `Portfolio ${idx + 1}`;
-            document.getElementById('summary-tbody').innerHTML = createTableRowsSingle(dogeSummaries[idx]);
-            fetchDogePrice(idx);
+            document.getElementById('summary-tbody').innerHTML = createTableRowsSingle(dogeSummaries[idx], lastKnownPrice);
+            addEditButtonListeners();
         });
     </script>
 </body>
