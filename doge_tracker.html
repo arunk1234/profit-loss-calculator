@@ -928,6 +928,11 @@
                     item.classList.add('selected');
                 }
             });
+            
+            // Add event listeners to the edit buttons
+            document.querySelectorAll('.edit-btn').forEach(button => {
+                button.addEventListener('click', handleEditClick);
+            });
         }
 
         // Handle portfolio selection change
